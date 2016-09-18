@@ -1,0 +1,17 @@
+
+div.led
+{
+    background-color: black;
+    color: white;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    outline: 1px solid;
+    float: left;
+}
+
+div.led_row
+{
+    width: 1000px;
+    height: 100px;
+}
