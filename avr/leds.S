@@ -40,6 +40,19 @@
 
 #include <avr/io.h>
 
+;       nS      instruction  @ 20MHz
+; 1 hi  700     14
+; 1 lo  600     12
+; 0 hi  350     7
+; 0 lo  800     16
+
+;            ____
+; 1 code    |700 |600|
+;           |    |___|
+;            ___
+; 0 code    |350|800 |
+;           |   |____|
+
 
 .global asm_send_led_data
 asm_send_led_data:
@@ -56,18 +69,13 @@ asm_send_led_data:
  NEXT_BIT:
             sbi _SFR_IO_ADDR(PORTC), 5      ; Set bit 5, PC5. Take two cycles
             lsl r20                         ; logical shift next bit of data into carry.
+            nop
+            nop
+            nop
             brcs OUT_ONE                    ; branch if carry set
  OUT_ZERO:
-            nop
-            nop
             cbi _SFR_IO_ADDR(PORTC), 5      ; Clear bit 5, PC5. Take two cycles
-            nop
-            nop
-            nop
-            nop
-            nop
-            nop
-            nop
+            rjmp SKIP_DELAY
  OUT_ONE:
             nop
             nop
@@ -75,10 +83,8 @@ asm_send_led_data:
             nop
             nop
             nop
-            nop
+ SKIP_DELAY:
             cbi _SFR_IO_ADDR(PORTC), 5      ; Clear bit 5, PC5. Takes two cycles
-            nop
-            nop
             nop
             nop
             nop
